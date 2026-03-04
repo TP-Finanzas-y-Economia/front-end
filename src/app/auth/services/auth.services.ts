@@ -8,17 +8,18 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:3000/users';
+  private apiUrl = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient) {}
 
-  signup(user: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user);
+  signup(user: User): Observable<any> {
+    return this.http.post(`${this.apiUrl}/signup`, user);
   }
 
-  login(email: string, password: string): Observable<User[]> {
-    return this.http.get<User[]>(
-      `${this.apiUrl}?email=${email}&password=${password}`
-    );
+  login(username: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, {
+      username: username,
+      password: password
+    });
   }
 }

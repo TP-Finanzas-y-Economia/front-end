@@ -16,7 +16,7 @@ export class LoginComponent {
 
   isLoginView = true;
 
-  email = '';
+  username = '';
   password = '';
   errorMessage = '';
 
@@ -25,20 +25,27 @@ export class LoginComponent {
     private router: Router
   ) {}
 
-  // Función para cambiar entre formularios sin salir de la página azul
   toggleView() {
     this.isLoginView = !this.isLoginView;
-    this.errorMessage = ''; // Limpiamos errores al cambiar
+    this.errorMessage = '';
   }
 
   onLogin() {
-    this.authService.login(this.email, this.password)
-      .subscribe(users => {
-        if (users && users.length > 0) {
-          alert('Login exitoso');
-          this.router.navigate(['/']);
-        } else {
+    // Mandamos el username en lugar del email
+    this.authService.login(this.username, this.password)
+      .subscribe({
+        next: (response) => {
+          if (response && response.token) {
+            alert('Login exitoso 🎉');
+            localStorage.setItem('token', response.token);
+            this.router.navigate(['/']);
+          } else {
+            this.errorMessage = 'Error: No se recibió el token del servidor';
+          }
+        },
+        error: (err) => {
           this.errorMessage = 'Credenciales incorrectas';
+          console.error('Fallo de autenticación:', err);
         }
       });
   }
