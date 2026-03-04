@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common'; // Necesario para el *ngIf
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.services';
-import { SignupComponent } from '../signup/signup.component'; // Importa tu componente de registro
+import { SignupComponent } from '../signup/signup.component';
 
 @Component({
   selector: 'app-login',
@@ -31,16 +31,18 @@ export class LoginComponent {
   }
 
   onLogin() {
-    // Mandamos el username en lugar del email
+
     this.authService.login(this.username, this.password)
       .subscribe({
         next: (response) => {
           if (response && response.token) {
             alert('Login exitoso 🎉');
             localStorage.setItem('token', response.token);
-            this.router.navigate(['/']);
+
+            // CAMBIA ESTO:
+            this.router.navigate(['/simulador']);
           } else {
-            this.errorMessage = 'Error: No se recibió el token del servidor';
+            this.errorMessage = 'Error: No se recibió el token';
           }
         },
         error: (err) => {

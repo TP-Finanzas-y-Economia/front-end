@@ -1,5 +1,5 @@
 export interface User {
-  username: string;  // ✅ Ahora sí coincide con Java
+  username: string;
   dni: string;
   email: string;
   password: string;
