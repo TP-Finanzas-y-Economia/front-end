@@ -1,0 +1,23 @@
+<div class="signup-container">
+  <h2 class="title">Crear una cuenta</h2>
+
+  <form (ngSubmit)="onSignup()" class="form-wrapper">
+    <input type="text" [(ngModel)]="user.name" name="name" placeholder="Nombre de usuario" required>
+
+    <input type="text" [(ngModel)]="user.dni" name="dni" placeholder="DNI" required>
+
+    <input type="email" [(ngModel)]="user.email" name="email" placeholder="Correo electrónico" required>
+
+    <div class="password-group">
+      <input type="password" [(ngModel)]="user.password" name="password" placeholder="Contraseña" required>
+      <span class="eye-icon">🚫</span> <!-- Icono tachado de tu imagen -->
+    </div>
+
+    <button type="submit" class="btn-create">Crear cuenta</button>
+  </form>
+
+  <p class="footer">
+    ¿Ya tienes cuenta?
+    <span class="link-orange" (click)="goBack()" style="cursor: pointer;">Iniciar sesión</span>
+  </p>
+</div>

@@ -1,0 +1,53 @@
+{
+  "users": [
+    {
+      "id": "79c8",
+      "name": "",
+      "dni": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "56e9",
+      "name": "",
+      "dni": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "2769",
+      "name": "",
+      "dni": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "cb33",
+      "name": "",
+      "dni": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "7d6b",
+      "name": "Jose",
+      "dni": "72260417",
+      "email": "josehola@hotmail.com",
+      "password": "hoila"
+    },
+    {
+      "id": "95d1",
+      "name": "isa",
+      "dni": "909080",
+      "email": "juan191021@hotmail.com",
+      "password": "hola"
+    },
+    {
+      "id": "8dfa",
+      "name": "",
+      "dni": "",
+      "email": "",
+      "password": ""
+    }
+  ]
+}

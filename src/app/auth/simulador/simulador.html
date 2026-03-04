@@ -1,0 +1,185 @@
+<div class="container mt-4 mb-5">
+
+  <h2 class="text-center text-primary mb-4">
+    Simulador de Crédito Mivivienda
+  </h2>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+
+        <!-- PASO 1 -->
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Valor de Vivienda (S/)</label>
+          <input type="number"
+                 [(ngModel)]="simulacion.valorInmueble"
+                 class="form-control border-primary">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Sueldo Neto (S/)</label>
+          <input type="number"
+                 [(ngModel)]="sueldoIngresado"
+                 class="form-control border-primary">
+        </div>
+
+        <div class="col-md-4 d-flex align-items-end">
+          <button (click)="validarBono()"
+                  class="btn btn-warning w-100 fw-bold">
+            VALIDAR BONO
+          </button>
+        </div>
+
+        <!-- PASO 2 -->
+        <ng-container *ngIf="pasoActual >= 2">
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Cuota Inicial (%)</label>
+            <input type="number"
+                   [(ngModel)]="simulacion.porcentajeCuotaInicial"
+                   class="form-control border-primary">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Bono BBP</label>
+            <div class="form-control bg-light text-success fw-bold">
+              S/ {{simulacion.montoBonoAplicado | number}}
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-end">
+            <button (click)="buscarBancos()"
+                    class="btn btn-info w-100 fw-bold">
+              VER BANCOS
+            </button>
+          </div>
+
+        </ng-container>
+
+        <!-- PASO 3 -->
+        <ng-container *ngIf="pasoActual >= 3">
+
+          <div class="col-md-4">
+            <label class="form-label">Banco Disponible</label>
+            <select [(ngModel)]="simulacion.entidadId"
+                    class="form-select">
+              <option *ngFor="let b of bancos"
+                      [value]="b.id">
+                {{b.nombreEntidad}} (TEA: {{b.tasaEfectivaAnual}}%)
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Plazo (meses)</label>
+            <input type="number"
+                   [(ngModel)]="simulacion.plazoMeses"
+                   class="form-control">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Tipo de Gracia</label>
+            <select [(ngModel)]="simulacion.tipoGracia"
+                    class="form-select">
+              <option value="SIN_GRACIA">Sin Gracia</option>
+              <option value="PARCIAL">Parcial</option>
+              <option value="TOTAL">Total</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Meses de Gracia</label>
+            <input type="number"
+                   [(ngModel)]="simulacion.mesesGracia"
+                   class="form-control"
+                   min="0" max="6">
+          </div>
+
+          <div class="col-md-4 d-flex align-items-end">
+            <button (click)="generar()"
+                    class="btn btn-primary w-100 fw-bold"
+                    [disabled]="!simulacion.entidadId">
+              CALCULAR CRONOGRAMA
+            </button>
+          </div>
+
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div id="resultado-seccion"
+       *ngIf="cronograma"
+       class="fade-in">
+
+    <div class="row mb-3">
+
+      <div class="col-md-4">
+        <div class="card bg-light p-3 text-center shadow-sm">
+          <span class="text-muted small">TCEA</span>
+          <h4 class="m-0 text-primary">
+            {{cronograma.tcea}}%
+          </h4>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card bg-light p-3 text-center shadow-sm">
+          <span class="text-muted small">VAN</span>
+          <h4 class="m-0">
+            S/ {{cronograma.van | number:'1.2-2'}}
+          </h4>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card bg-light p-3 text-center shadow-sm">
+          <span class="text-muted small">TIR Mensual</span>
+          <h4 class="m-0 text-success">
+            {{cronograma.tir}}%
+          </h4>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="table-responsive"
+           style="max-height: 400px; overflow-y: auto;">
+
+        <table class="table table-hover mb-0">
+          <thead class="table-dark sticky-top">
+            <tr>
+              <th>Cuota</th>
+              <th>Saldo</th>
+              <th>Amort.</th>
+              <th>Interés</th>
+              <th>Seguros</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let c of cronograma.cuotas">
+              <td>{{c.numeroCuota}}</td>
+              <td>S/ {{c.saldoInsoluto | number:'1.2-2'}}</td>
+              <td>S/ {{c.amortizacion | number:'1.2-2'}}</td>
+              <td>S/ {{c.interes | number:'1.2-2'}}</td>
+              <td>
+                S/ {{(c.seguroDesgravamen + c.seguroInmueble) | number:'1.2-2'}}
+              </td>
+              <td class="fw-bold text-primary">
+                S/ {{c.montoCuotaSoles| number:'1.2-2'}}
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>

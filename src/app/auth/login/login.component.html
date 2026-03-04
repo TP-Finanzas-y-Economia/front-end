@@ -1,0 +1,26 @@
+<!-- SI ES LOGIN: Muestra todo el diseño azul con logo -->
+<div class="main-container" *ngIf="isLoginView">
+  <header class="brand-name">CREDIAPP</header>
+  <div class="content-wrapper">
+    <div class="logo-section">
+      <div class="logo-wrapper">
+        <img src="logo.jpg" alt="Logo">
+      </div>
+    </div>
+    <div class="form-section">
+      <h1>Bienvenido</h1>
+      <input type="text" [(ngModel)]="email" placeholder="usuario">
+      <input type="password" [(ngModel)]="password" placeholder="contraseña">
+      <button class="btn-login" (click)="onLogin()">Iniciar Sesión</button>
+      <p class="footer-text">
+        ¿No tienes cuenta? <a (click)="toggleView()">Registrarse</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- SI ES SIGNUP: Muestra SOLO el componente de registro (sin azul, sin logo) -->
+<div class="signup-page-wrapper" *ngIf="!isLoginView">
+  <app-signup (cancel)="toggleView()"></app-signup>
+</div>
+
