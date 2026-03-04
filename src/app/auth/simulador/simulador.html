@@ -1,185 +1,155 @@
-<div class="container mt-4 mb-5">
+<div class="main-container">
+  <div class="brand-name">CrediApp</div>
 
-  <h2 class="text-center text-primary mb-4">
-    Simulador de Crédito Mivivienda
-  </h2>
+  <div class="simulator-content">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate" class="custom-loader"></mat-progress-bar>
 
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
-      <div class="row g-3">
+    <div *ngIf="errorMsg" class="alert-box">
+      <mat-icon>error_outline</mat-icon> {{ errorMsg }}
+    </div>
 
-        <!-- PASO 1 -->
-        <div class="col-md-4">
-          <label class="form-label fw-bold">Valor de Vivienda (S/)</label>
-          <input type="number"
-                 [(ngModel)]="simulacion.valorInmueble"
-                 class="form-control border-primary">
+    <mat-card *ngIf="pasoActual === 1" class="glass-card fade-in">
+      <div class="form-section">
+        <h1 class="title-contrast">Simulación</h1>
+        <p class="subtitle">Datos de Vivienda e Ingresos</p>
+        
+        <div class="input-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Valor Vivienda</mat-label>
+            <input matInput type="number" [(ngModel)]="valorVivienda" placeholder="0.00">
+            <span matPrefix>S/&nbsp;</span>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Sueldo Mensual</mat-label>
+            <input matInput type="number" [(ngModel)]="sueldoIngresado" placeholder="0.00">
+            <span matPrefix>S/&nbsp;</span>
+          </mat-form-field>
         </div>
 
-        <div class="col-md-4">
-          <label class="form-label fw-bold">Sueldo Neto (S/)</label>
-          <input type="number"
-                 [(ngModel)]="sueldoIngresado"
-                 class="form-control border-primary">
+        <div class="options-grid">
+          <mat-checkbox [(ngModel)]="esSostenible">Vivienda Sostenible</mat-checkbox>
+          <mat-checkbox [(ngModel)]="esIntegrador">Proyecto Integrador</mat-checkbox>
+        </div>
+        
+        <button mat-raised-button class="btn-action" (click)="validarBono()">SIGUIENTE</button>
+      </div>
+    </mat-card>
+
+    <mat-card *ngIf="pasoActual === 2" class="glass-card fade-in">
+      <div class="form-section">
+        <h1 class="title-contrast">Calculadora de cuotas</h1>
+        <div class="bono-badge">Bono Buen Pagador: <strong>S/ {{ montoBonoAplicado | number }}</strong></div>
+        
+        <div class="input-row mt-3">
+          <mat-form-field appearance="outline" class="flex-grow">
+            <mat-label>Cuota Inicial (S/)</mat-label>
+            <input matInput type="number" [(ngModel)]="cuotaInicialMonto" (input)="calcularPorcentaje()">
+          </mat-form-field>
+          <div class="percent-tag">{{ porcentajeCalculado | number:'1.1-2' }}%</div>
         </div>
 
-        <div class="col-md-4 d-flex align-items-end">
-          <button (click)="validarBono()"
-                  class="btn btn-warning w-100 fw-bold">
-            VALIDAR BONO
-          </button>
-        </div>
+        <button mat-stroked-button class="btn-secondary" (click)="mostrarBancosDisponibles()">VER BANCOS DISPONIBLES</button>
 
-        <!-- PASO 2 -->
-        <ng-container *ngIf="pasoActual >= 2">
+        <div *ngIf="bancosFiltrados.length > 0" class="mt-4 fade-in">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Entidad Financiera</mat-label>
+            <mat-select [(ngModel)]="entidadIdSeleccionada">
+              <mat-option *ngFor="let b of bancosFiltrados" [value]="b.id">{{ b.nombreEntidad }}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-          <div class="col-md-4">
-            <label class="form-label fw-bold">Cuota Inicial (%)</label>
-            <input type="number"
-                   [(ngModel)]="simulacion.porcentajeCuotaInicial"
-                   class="form-control border-primary">
-          </div>
+          <div *ngIf="entidadIdSeleccionada" class="fade-in">
+            <div class="input-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Plazo (Meses)</mat-label>
+                <input matInput type="number" [(ngModel)]="plazoMeses" min="60" max="300">
+                <mat-hint>60 - 300 meses</mat-hint>
+              </mat-form-field>
 
-          <div class="col-md-4">
-            <label class="form-label fw-bold">Bono BBP</label>
-            <div class="form-control bg-light text-success fw-bold">
-              S/ {{simulacion.montoBonoAplicado | number}}
+              <mat-form-field appearance="outline">
+                <mat-label>Meses de Gracia</mat-label>
+                <input matInput type="number" [(ngModel)]="mesesGracia" [disabled]="tipoGracia === 'SIN_GRACIA'" min="0" max="6">
+              </mat-form-field>
             </div>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Tipo Gracia</mat-label>
+              <mat-select [(ngModel)]="tipoGracia" (selectionChange)="onTipoGraciaChange()">
+                <mat-option value="SIN_GRACIA">Sin Gracia</mat-option>
+                <mat-option value="PARCIAL">Parcial (Solo Interés)</mat-option>
+                <mat-option value="TOTAL">Total (Capitalizable)</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button class="btn-action" (click)="generar()">CALCULAR CRONOGRAMA</button>
           </div>
-
-          <div class="col-md-4 d-flex align-items-end">
-            <button (click)="buscarBancos()"
-                    class="btn btn-info w-100 fw-bold">
-              VER BANCOS
-            </button>
-          </div>
-
-        </ng-container>
-
-        <!-- PASO 3 -->
-        <ng-container *ngIf="pasoActual >= 3">
-
-          <div class="col-md-4">
-            <label class="form-label">Banco Disponible</label>
-            <select [(ngModel)]="simulacion.entidadId"
-                    class="form-select">
-              <option *ngFor="let b of bancos"
-                      [value]="b.id">
-                {{b.nombreEntidad}} (TEA: {{b.tasaEfectivaAnual}}%)
-              </option>
-            </select>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Plazo (meses)</label>
-            <input type="number"
-                   [(ngModel)]="simulacion.plazoMeses"
-                   class="form-control">
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Tipo de Gracia</label>
-            <select [(ngModel)]="simulacion.tipoGracia"
-                    class="form-select">
-              <option value="SIN_GRACIA">Sin Gracia</option>
-              <option value="PARCIAL">Parcial</option>
-              <option value="TOTAL">Total</option>
-            </select>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label">Meses de Gracia</label>
-            <input type="number"
-                   [(ngModel)]="simulacion.mesesGracia"
-                   class="form-control"
-                   min="0" max="6">
-          </div>
-
-          <div class="col-md-4 d-flex align-items-end">
-            <button (click)="generar()"
-                    class="btn btn-primary w-100 fw-bold"
-                    [disabled]="!simulacion.entidadId">
-              CALCULAR CRONOGRAMA
-            </button>
-          </div>
-
-        </ng-container>
-
+        </div>
       </div>
+    </mat-card>
+
+    <div *ngIf="cronograma" id="resultado-final" class="fade-in mt-4 pb-5">
+      <mat-card class="glass-card result-summary">
+        <div class="main-result">
+          <span class="res-label">Cuota Mensual Estimada</span>
+          <h2 class="res-value">S/ {{ cronograma.montoTotalPagado / plazoMeses | number:'1.2-2' }}</h2>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="s-label">Préstamo</span>
+            <span class="s-value text-white-shadow">S/ {{ cronograma.montoPrestamoNeto | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="s-label">TCEA (Anual)</span>
+            <span class="s-value highlight-green">{{ cronograma.tcea }}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="s-label">Total a Pagar</span>
+            <span class="s-value text-white-shadow">S/ {{ cronograma.montoTotalPagado | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="s-label">VAN</span>
+            <span class="s-value" [style.color]="cronograma.van > 0 ? '#ff5252' : '#00e676'">
+              S/ {{ cronograma.van | number:'1.2-2' }}
+            </span>
+          </div>
+          <div class="stat-item">
+            <span class="s-label">TIR Mensual</span>
+            <span class="s-value text-white-shadow">{{ cronograma.tir }}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="s-label">Moneda</span>
+            <span class="s-value text-white-shadow">Soles (PEN)</span>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="glass-card mt-3">
+        <h3 class="table-title title-contrast">Cronograma de Pagos Detallado</h3>
+        <div class="table-responsive custom-table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>Saldo</th>
+                <th>Interés</th>
+                <th>Amortiz.</th>
+                <th>Cuota</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of listaDeCuotas">
+                <td>{{ c.numeroCuota }}</td>
+                <td>S/ {{ c.saldoInsoluto | number:'1.2-2' }}</td>
+                <td>S/ {{ c.interes | number:'1.2-2' }}</td>
+                <td>S/ {{ c.amortizacion | number:'1.2-2' }}</td>
+                <td class="final-cell">S/ {{ c.montoCuota | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button mat-button class="btn-reset" (click)="reiniciar()">REALIZAR NUEVA SIMULACIÓN</button>
+      </mat-card>
     </div>
   </div>
-
-  <!-- RESULTADO -->
-  <div id="resultado-seccion"
-       *ngIf="cronograma"
-       class="fade-in">
-
-    <div class="row mb-3">
-
-      <div class="col-md-4">
-        <div class="card bg-light p-3 text-center shadow-sm">
-          <span class="text-muted small">TCEA</span>
-          <h4 class="m-0 text-primary">
-            {{cronograma.tcea}}%
-          </h4>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card bg-light p-3 text-center shadow-sm">
-          <span class="text-muted small">VAN</span>
-          <h4 class="m-0">
-            S/ {{cronograma.van | number:'1.2-2'}}
-          </h4>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card bg-light p-3 text-center shadow-sm">
-          <span class="text-muted small">TIR Mensual</span>
-          <h4 class="m-0 text-success">
-            {{cronograma.tir}}%
-          </h4>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="card shadow-sm">
-      <div class="table-responsive"
-           style="max-height: 400px; overflow-y: auto;">
-
-        <table class="table table-hover mb-0">
-          <thead class="table-dark sticky-top">
-            <tr>
-              <th>Cuota</th>
-              <th>Saldo</th>
-              <th>Amort.</th>
-              <th>Interés</th>
-              <th>Seguros</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr *ngFor="let c of cronograma.cuotas">
-              <td>{{c.numeroCuota}}</td>
-              <td>S/ {{c.saldoInsoluto | number:'1.2-2'}}</td>
-              <td>S/ {{c.amortizacion | number:'1.2-2'}}</td>
-              <td>S/ {{c.interes | number:'1.2-2'}}</td>
-              <td>
-                S/ {{(c.seguroDesgravamen + c.seguroInmueble) | number:'1.2-2'}}
-              </td>
-              <td class="fw-bold text-primary">
-                S/ {{c.montoCuotaSoles| number:'1.2-2'}}
-              </td>
-            </tr>
-          </tbody>
-
-        </table>
-      </div>
-    </div>
-
-  </div>
-
 </div>

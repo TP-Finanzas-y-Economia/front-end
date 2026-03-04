@@ -1,0 +1,197 @@
+/* Paleta de colores Premium */
+:root {
+  --primary-blue: #0022ff;
+  --dark-bg: #0a0e27;
+  --glass-bg: rgba(26, 35, 126, 0.85);
+  --accent-gold: #ffb300;
+  --text-white: #ffffff;
+  --text-muted: #b0bec5;
+}
+
+.main-container {
+  background: radial-gradient(circle at top right, #1a237e, var(--dark-bg));
+  min-height: 100vh;
+  padding: 40px 60px;
+  color: var(--text-white);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.brand-name {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--accent-gold);
+  margin-bottom: 30px;
+}
+
+.simulator-content {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+/* Tarjetas con Efecto Cristal */
+.glass-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 24px !important;
+  padding: 35px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  background: linear-gradient(to right, #fff, #b0bec5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+/* Inputs de Angular Material */
+::ng-deep .mat-mdc-form-field {
+  margin-bottom: 15px;
+}
+
+::ng-deep .mdc-text-field--outline {
+  background: white !important;
+  border-radius: 12px !important;
+}
+
+::ng-deep .mat-mdc-select-value, ::ng-deep .mat-mdc-input-element {
+  color: #333 !important;
+  font-weight: 500 !important;
+}
+
+/* Bono Badge */
+.bono-badge {
+  background: rgba(255, 179, 0, 0.15);
+  border: 1px dashed var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Botones */
+.btn-action {
+  background: linear-gradient(45deg, var(--primary-blue), #448aff) !important;
+  color: # !important;
+  height: 55px;
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  letter-spacing: 1px;
+  width: 100%;
+  margin-top: 20px;
+  box-shadow: 0 10px 20px rgba(0, 34, 255, 0.3) !important;
+}
+
+.btn-secondary {
+  border: 1.5px solid var(--text-muted) !important;
+  color: white !important;
+  height: 50px;
+  border-radius: 14px !important;
+  width: 100%;
+}
+
+/* Resultados */
+.result-summary {
+  background: linear-gradient(135deg, #1a237e, #0d47a1) !important;
+  text-align: center;
+}
+
+.res-label { color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; color: #b0bec5; }
+.res-value { font-size: 3rem; font-weight: 800; color: var(--accent-gold); margin: 10px 0; color: #ffb300;}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 25px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 20px;
+}
+
+.stat-item { display: flex; flex-direction: column; }
+.s-label { color: var(--text-muted); font-size: 0.8rem; }
+.s-value { font-size: 1.2rem; font-weight: 600; }
+.highlight .s-value { color: #00e676; }
+
+/* Tabla Custom */
+.custom-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table {
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0 5px;
+}
+
+.table thead th {
+  background: rgba(255,255,255,0.05);
+  border: none;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 15px;
+}
+
+.table tbody tr {
+  background: rgba(255,255,255,0.02);
+  transition: 0.3s;
+}
+
+.table tbody tr:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.table td {
+  padding: 15px;
+  border: none;
+  vertical-align: middle;
+}
+
+.final-cell {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+/* Utilidades */
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.percent-tag {
+  background: var(--primary-blue);
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-left: 10px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+}
+
+.input-row { display: flex; align-items: flex-start; }
+.flex-grow { flex-grow: 1; }
+
+.btn-reset {
+  color: var(--text-muted) !important;
+  margin-top: 20px;
+  width: 100%;
+}

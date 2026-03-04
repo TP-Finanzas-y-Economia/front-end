@@ -10,11 +10,11 @@ import { SimulacionRequestDTO } from '../models/simulacion-requestDTO';
   providedIn: 'root',
 })
 export class CronogramaServices {
-  private readonly API_URL = 'http://localhost:3000/api/cronograma';
+  private readonly API_URL = 'http://localhost:8080/api/cronograma';
 
   constructor(private http: HttpClient) { }
 
-  // Filtra los bancos según los datos ingresados
+
   getBancosAptos(sueldo: number, precio: number, inicial: number): Observable<EntidadFinanciera[]> {
     return this.http.get<EntidadFinanciera[]>(
       `${this.API_URL}/bancos-disponibles?sueldo=${sueldo}&precio=${precio}&cuotaInicial=${inicial}`

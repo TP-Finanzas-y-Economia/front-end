@@ -16,15 +16,14 @@ export class SignupComponent {
 
   @Output() cancel = new EventEmitter<void>();
 
-  user: User = {
-    name: '',
+  user = {
+    username: '',
     dni: '',
     email: '',
     password: ''
   };
 
   constructor(private authService: AuthService, private router: Router) {}
-
 
   goBack() {
     this.cancel.emit();
@@ -33,17 +32,16 @@ export class SignupComponent {
   onSignup() {
     this.authService.signup(this.user).subscribe({
       next: (response) => {
-        alert('¡Usuario creado con éxito! 🎉');
-        console.log('Datos guardados en db.json:', response);
 
-        this.user = { name: '', dni: '', email: '', password: '' };
+        alert('¡Usuario creado con éxito en MySQL! ');
+        console.log('Respuesta del servidor Java:', response);
 
-
+        this.user = { username: '', dni: '', email: '', password: '' };
         this.goBack();
       },
       error: (err) => {
-        console.error('Error al registrar:', err);
-        alert('Hubo un error al crear la cuenta. Revisa si el json-server está encendido.');
+        console.error('Error desde Spring Boot:', err);
+        alert('Hubo un error al crear la cuenta. Revisa la consola.');
       }
     });
   }
